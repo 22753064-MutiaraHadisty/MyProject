@@ -10,9 +10,9 @@ use App\Http\Controllers\StudentController;
 //     return view('welcome');
 // });
 
-// Route::get('/student', function () {
-//     return view('student');
-// });
+Route::get('/student', function () {
+    return view('student');
+});
 
 Route::get('/user', [UserController::class, 'index']);
 Route::get('/student', [StudentController::class, 'index']); 
