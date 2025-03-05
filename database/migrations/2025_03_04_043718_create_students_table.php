@@ -17,9 +17,8 @@ return new class extends Migration
             $table->string('email');
             $table->string('phone');
             $table->string('class');
-            $table->string('address');
-            $table->boolean('gender');
-             $table->boolean('status');
+            $table->string('address');  $table->enum('gender', ['L', 'P']);
+             $table->enum('status', ['Aktif', 'Tidak Aktif']);
             $table->timestamps();
         });
     }
