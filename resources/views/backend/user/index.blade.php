@@ -1,59 +1,76 @@
 @extends('backend.app')
+
 @section('content')
 
- <div class="container">
-          <div class="page-inner">
-            <div class="page-header">
-              <h3 class="fw-bold mb-3">Tables</h3>
-              <ul class="breadcrumbs mb-3">
-                <li class="nav-home">
-                  <a href="#">
-                    <i class="icon-home"></i>
-                  </a>
-                </li>
-                <li class="separator">
-                  <i class="icon-arrow-right"></i>
-                </li>
-                <li class="nav-item">
-                  <a href="#">Tables</a>
-                </li>
-                <li class="separator">
-                  <i class="icon-arrow-right"></i>
-                </li>
-                <li class="nav-item">
-                  <a href="#">Basic Tables</a>
-                </li>
-              </ul>
-            </div>
-            <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                  <div class="card-header">
-                    <div class="card-title">Tabel User</div>
-                  </div>
-                  <div class="card-body">
-                    <table class="table table-head-bg-info table-hover">
-                      <thead>
-                        <tr>
-                          <th scope="col">No</th>
-                          <th scope="col">Nama</th>
-                          <th scope="col">Email</th>
-                        </tr>
-                      </thead>
-                     <tbody>
-            @foreach ($users as $index => $user)
-                 <tr>
-                <td>{{ $index + 1 }}</td>
-                <td>{{ $user->name }}</td>
-                <td>{{ $user->email }}</td>
-            </tr>
-            @endforeach
-        </tbody>
+<div class="container">
+    <h3 class="fw-bold mb-3">Halaman User</h3>
+    <a href="{{ route('user.create') }}" class="btn btn-success mb-3">Tambah User</a>
+
+    @if(session('success'))
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                Swal.fire({
+                    title: "Berhasil!",
+                    text: "{{ session('success') }}",
+                    icon: "success",
+                    confirmButtonText: "OK"
+                });
+            });
+        </script>
+    @endif
+
+    <div class="card">
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama</th>
+                        <th>Email</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($users as $index => $user)
+                    <tr>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $user->name }}</td>
+                        <td>{{ $user->email }}</td>
+                        <td>
+                            <a href="{{ route('user.edit', $user->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                            <form action="{{ route('user.destroy', $user->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirmDelete(event)">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                            </form>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
             </table>
         </div>
-        </div>
-      </div>
     </div>
-    </div>
-    @endsection
+</div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function confirmDelete(event) {
+        event.preventDefault();
+        let form = event.target;
+        Swal.fire({
+            title: "Apakah Anda yakin?",
+            text: "User akan dihapus secara permanen!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Ya, Hapus!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+    }
+</script>
+
+@endsection
