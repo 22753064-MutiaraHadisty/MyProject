@@ -37,6 +37,18 @@
             <p>Data User</p>
           </a>
         </li>
+         <li class="nav-item {{ Request::is ('students*') ? 'active' : '' }}">
+          <a href="{{ route('students') }}">
+            <i class="fas fa-users"></i>
+            <p>Data Students</p>
+          </a>
+        </li>
+        <li class="nav-item {{ Request::is ('teacher*') ? 'active' : '' }}">
+          <a href="{{ route('teacher') }}">
+            <i class="fas fa-users"></i>
+            <p>Data Teachers</p>
+          </a>
+        </li>
 
          <li class="nav-item {{ Request::is ('logout*') ? 'active' : '' }}">
           <!-- Authentication -->

@@ -3,41 +3,42 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Student;
+use App\Models\Teacher;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 
-class StudentController extends Controller
+class TeacherController extends Controller
 {
-    public function index(Request $request)
-    {$search = $request->input('search');
+   public function index(Request $request)
+{
+    $search = $request->input('search');
 
-        $students = Student::query()
-            ->when($search, function ($query, $search) {
-                return $query->where('name', 'like', "%$search%")
-                    ->orWhere('email', 'like', "%$search%")
-                    ->orWhere('address', 'like', "%$search%");
-            })
-            ->orderBy('created_at', 'asc')
-            ->paginate(5);
-        return view('backend.student.index', compact('students'));
-    }
+    $teachers = Teacher::query()
+        ->when($search, function ($query, $search) {
+            return $query->where('name', 'like', "%$search%")
+                ->orWhere('email', 'like', "%$search%")
+                ->orWhere('address', 'like', "%$search%"); // Tambahkan pencarian berdasarkan alamat
+        })
+        ->orderBy('created_at', 'asc')
+        ->paginate(5);
+
+    return view('backend.teacher.index', compact('teachers', 'search'));
+}
 
     public function create()
     {
-        return view('backend.student.create');
+        return view('backend.teacher.create');
     }
 
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name'    => 'required|string|max:255',
-            'email'   => 'required|email|unique:students,email',
+            'email'   => 'required|email|unique:teachers,email',
             'phone'   => 'required|string|max:15',
-            'class'   => 'required|string|max:50',
             'address' => 'required|string|max:255',
             'gender'  => 'required|in:Laki-Laki,Perempuan',
-            'status'  => 'required|in:Active,Inactive',
+            'status'  => 'required|in:Aktif,Tidak Aktif',
             'photo'   => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
@@ -45,36 +46,35 @@ class StudentController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $validatedData = $validator->validated();
+        $teacher = new Teacher($validator->validated());
 
         if ($request->hasFile('photo')) {
-            $validatedData['photo'] = $this->uploadPhoto($request->file('photo'));
+            $teacher->photo = $this->uploadPhoto($request->file('photo'));
         }
 
-        Student::create($validatedData);
+        $teacher->save();
 
-        session()->flash('success', 'Data siswa berhasil ditambahkan!');
-        return redirect()->route('students');
+        session()->flash('success', 'Data guru berhasil ditambahkan!');
+        return redirect()->route('teacher');
     }
 
     public function edit($id)
     {
-        $student = Student::findOrFail($id);
-        return view('backend.student.edit', compact('student'));
+        $teacher = Teacher::findOrFail($id);
+        return view('backend.teacher.edit', compact('teacher'));
     }
 
     public function update(Request $request, $id)
     {
-        $student = Student::findOrFail($id);
+        $teacher = Teacher::findOrFail($id);
 
         $validator = Validator::make($request->all(), [
             'name'    => 'required|string|max:255',
-            'email'   => 'required|email|unique:students,email,' . $id,
+            'email'   => 'required|email|unique:teachers,email,' . $id,
             'phone'   => 'required|string|max:15',
-            'class'   => 'required|string|max:50',
             'address' => 'required|string|max:255',
             'gender'  => 'required|in:Laki-Laki,Perempuan',
-            'status'  => 'required|in:Active,Inactive',
+            'status'  => 'required|in:Aktif,Tidak Aktif',
             'photo'   => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
@@ -85,36 +85,35 @@ class StudentController extends Controller
         $validatedData = $validator->validated();
 
         if ($request->hasFile('photo')) {
-            if ($student->photo) {
-                $this->deleteOldPhoto($student->photo);
+            if ($teacher->photo) {
+                $this->deleteOldPhoto($teacher->photo);
             }
             $validatedData['photo'] = $this->uploadPhoto($request->file('photo'));
         }
 
-        $student->update($validatedData);
+        $teacher->update($validatedData);
 
-        session()->flash('success', 'Data siswa berhasil diperbarui!');
-        return redirect()->route('students');
+        session()->flash('success', 'Data guru berhasil diperbarui!');
+        return redirect()->route('teacher');
     }
 
     public function destroy($id)
     {
-        $student = Student::findOrFail($id);
+        $teacher = Teacher::findOrFail($id);
 
-        if ($student->photo) {
-            $this->deleteOldPhoto($student->photo);
+        if ($teacher->photo) {
+            $this->deleteOldPhoto($teacher->photo);
         }
 
-        $student->delete();
+        $teacher->delete();
 
-        session()->flash('success', 'Data siswa berhasil dihapus!');
-        return redirect()->route('students');
+        session()->flash('success', 'Data guru berhasil dihapus!');
+        return redirect()->route('teacher');
     }
 
     private function uploadPhoto($file)
     {
         $folderPath = public_path('backend/images');
-
         if (!File::exists($folderPath)) {
             File::makeDirectory($folderPath, 0777, true, true);
         }

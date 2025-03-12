@@ -18,7 +18,6 @@ class TeacherSeeder extends Seeder
               'name'    => 'Mutiara',
                 'email'   => 'mutiara12@gmail.com',
                 'phone'   => '082133445566',
-                'course'   => 'fisika',
                 'address' => 'Rajabassa',
                 'gender'  => 'P',
                 'status'  => 'Aktif',

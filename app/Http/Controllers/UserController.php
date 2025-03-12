@@ -5,12 +5,24 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::all();
+        $search = $request->input('search');
+
+        $users = User::when($search, function ($query) use ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%$search%")
+                  ->orWhere('email', 'like', "%$search%");
+            });
+        })
+        ->orderBy('created_at', 'asc')
+        ->paginate(5)
+        ->appends(['search' => $search]); // Menyimpan keyword pencarian di pagination
+
         return view('backend.user.index', compact('users'));
     }
 
@@ -21,11 +33,15 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
 
         User::create([
             'name' => $request->name,
@@ -44,12 +60,18 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $user = User::findOrFail($id);
+
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $id,
+            'password' => 'nullable|min:6',
         ]);
 
-        $user = User::findOrFail($id);
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
@@ -61,8 +83,9 @@ class UserController extends Controller
 
     public function destroy($id)
     {
-        User::findOrFail($id)->delete();
+        $user = User::findOrFail($id);
+        $user->delete();
+
         return redirect()->route('user')->with('success', 'User berhasil dihapus.');
     }
 }
-

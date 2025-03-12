@@ -1,13 +1,13 @@
 @extends('backend.app')
 @section('content')
 <div class="container">
+  <div class="container" style="min-height: 100vh; overflow-y: auto;">
     <div class="page-inner">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <div class="card-title">Tambah User</div>
-                        <a href="{{ route('user') }}" class="btn btn-info btn-sm">Kembali</a>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-sm border rounded-lg" style="max-height: 80vh; overflow-y: auto;">
+                    <div class="card-header text-center bg-primary text-white">
+                        <h4 class="card-title mb-0">Tambah User</h4>
                     </div>
                     <div class="card-body">
                         <form action="{{ route('user.store') }}" method="POST">
@@ -56,6 +56,7 @@
                                     <button type="submit" class="btn btn-primary">
                                         <i class="fa fa-save"></i> Simpan
                                     </button>
+                                     <a href="{{ route('user') }}" class="btn btn-secondary">Kembali</a>
                                 </div>
                             </div>
                         </form>
