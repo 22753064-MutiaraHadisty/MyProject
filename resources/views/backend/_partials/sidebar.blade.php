@@ -24,33 +24,43 @@
   <div class="sidebar-wrapper scrollbar scrollbar-inner">
     <div class="sidebar-content">
       <ul class="nav nav-secondary">
-        <li class="nav-item {{ Request::is ('dashboard*') ? 'active' : '' }}">
+        <li class="nav-item {{ Request::is('dashboard*') ? 'active' : '' }}">
           <a href="{{ route('dashboard') }}">
             <i class="fas fa-home"></i>
             <p>Dashboard</p>
           </a>
         </li>
 
-         <li class="nav-item {{ Request::is ('user*') ? 'active' : '' }}">
+        <li class="nav-item {{ Request::is('user*') ? 'active' : '' }}">
           <a href="{{ route('user') }}">
-            <i class="fas fa-users"></i>
+            <i class="fas fa-user"></i> <!-- Ikon User -->
             <p>Data User</p>
           </a>
         </li>
-         <li class="nav-item {{ Request::is ('students*') ? 'active' : '' }}">
+        
+        <li class="nav-item {{ Request::is('students*') ? 'active' : '' }}">
           <a href="{{ route('students') }}">
-            <i class="fas fa-users"></i>
+            <i class="fas fa-user-graduate"></i> <!-- Ikon Siswa -->
             <p>Data Students</p>
           </a>
         </li>
-        <li class="nav-item {{ Request::is ('teacher*') ? 'active' : '' }}">
+        
+        <li class="nav-item {{ Request::is('teacher*') ? 'active' : '' }}">
           <a href="{{ route('teacher') }}">
-            <i class="fas fa-users"></i>
+            <i class="fas fa-chalkboard-teacher"></i> <!-- Ikon Guru -->
             <p>Data Teachers</p>
           </a>
         </li>
+        
+        <li class="nav-item {{ Request::is('mapel*') ? 'active' : '' }}">
+          <a href="{{ route('mapel') }}">
+            <i class="fas fa-book"></i> <!-- Ikon Mata Pelajaran -->
+            <p>Data Mata Pelajaran</p>
+          </a>
+        </li>
 
-         <li class="nav-item {{ Request::is ('logout*') ? 'active' : '' }}">
+
+         <li class="nav-item {{ Request::is('logout*') ? 'active' : '' }}">
           <!-- Authentication -->
           <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
             <i class="fas fa-sign-out-alt"></i>

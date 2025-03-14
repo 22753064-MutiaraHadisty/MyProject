@@ -34,7 +34,7 @@ class TeacherController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name'    => 'required|string|max:255',
-            'email'   => 'required|email|unique:teachers,email',
+            'email'   => 'required|email|unique:teacher,email',
             'phone'   => 'required|string|max:15',
             'address' => 'required|string|max:255',
             'gender'  => 'required|in:Laki-Laki,Perempuan',
@@ -70,7 +70,7 @@ class TeacherController extends Controller
 
         $validator = Validator::make($request->all(), [
             'name'    => 'required|string|max:255',
-            'email'   => 'required|email|unique:teachers,email,' . $id,
+            'email'   => 'required|email|unique:teacher,email,' . $id,
             'phone'   => 'required|string|max:15',
             'address' => 'required|string|max:255',
             'gender'  => 'required|in:Laki-Laki,Perempuan',

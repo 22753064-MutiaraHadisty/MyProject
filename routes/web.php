@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MapelController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\StudentController;
@@ -39,8 +40,16 @@ Route::middleware(['auth', 'verified'])->group(function() {
     Route::put('/students/{id}', [StudentController::class, 'update'])->name('students.update');
     Route::delete('/students/{id}', [StudentController::class, 'destroy'])->name('students.destroy');
 
-
+    // Routes untuk Search
     Route::get('/search', [SearchController::class, 'search'])->name('search');
+
+    // Routes untuk mapel
+    Route::get('/mapel', [MapelController::class, 'index'])->name('mapel');
+    Route::get('/mapel/create', [MapelController::class, 'create'])->name('mapel.create');
+    Route::post('/mapel/store', [MapelController::class, 'store'])->name('mapel.store');
+    Route::get('/mapel/edit/{id}', [MapelController::class, 'edit'])->name('mapel.edit');
+    Route::put('/mapel/update/{id}', [MapelController::class, 'update'])->name('mapel.update');
+    Route::delete('/mapel/delete/{id}', [MapelController::class, 'destroy'])->name('mapel.destroy');
 
     // Routes untuk Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

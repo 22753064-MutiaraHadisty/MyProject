@@ -4,13 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Student;
+use Illuminate\Session\Store;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\StoreStudentRequest;
 
 class StudentController extends Controller
 {
     public function index(Request $request)
-    {$search = $request->input('search');
+    {
+        $search = $request->input('search');
 
         $students = Student::query()
             ->when($search, function ($query, $search) {
@@ -28,24 +31,9 @@ class StudentController extends Controller
         return view('backend.student.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreStudentRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name'    => 'required|string|max:255',
-            'email'   => 'required|email|unique:students,email',
-            'phone'   => 'required|string|max:15',
-            'class'   => 'required|string|max:50',
-            'address' => 'required|string|max:255',
-            'gender'  => 'required|in:Laki-Laki,Perempuan',
-            'status'  => 'required|in:Active,Inactive',
-            'photo'   => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
-
-        $validatedData = $validator->validated();
+        $validatedData = $request->all();
 
         if ($request->hasFile('photo')) {
             $validatedData['photo'] = $this->uploadPhoto($request->file('photo'));
@@ -68,14 +56,14 @@ class StudentController extends Controller
         $student = Student::findOrFail($id);
 
         $validator = Validator::make($request->all(), [
-            'name'    => 'required|string|max:255',
-            'email'   => 'required|email|unique:students,email,' . $id,
-            'phone'   => 'required|string|max:15',
-            'class'   => 'required|string|max:50',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:students,email,' . $id,
+            'phone' => 'required|string|max:15',
+            'class' => 'required|string|max:50',
             'address' => 'required|string|max:255',
-            'gender'  => 'required|in:Laki-Laki,Perempuan',
-            'status'  => 'required|in:Active,Inactive',
-            'photo'   => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'gender' => 'required|in:Laki-Laki,Perempuan',
+            'status' => 'required|in:Active,Inactive',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         if ($validator->fails()) {

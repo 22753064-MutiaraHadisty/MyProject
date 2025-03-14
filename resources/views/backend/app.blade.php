@@ -41,15 +41,18 @@
       <!-- Sidebar -->
       @include('backend._partials.sidebar')
 
+      <div class="main-panel">
       <!-- Header -->
       @include('backend._partials.header')
 
       <!-- Main Content -->
       @yield('content')
+    
 
       <!-- Footer -->
       @include('backend._partials.footer')
     </div>
+</div>
 
     <!-- Core JS Files -->
     <script src="{{ url('backend/assets/js/core/jquery-3.7.1.min.js') }}"></script>
@@ -65,6 +68,7 @@
 
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+      @yield('script')
 
     <!-- Flash Message Notification -->
     <script>
