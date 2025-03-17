@@ -58,6 +58,12 @@
             <p>Data Mata Pelajaran</p>
           </a>
         </li>
+        <li class="nav-item {{ Request::is('nilai*') ? 'active' : '' }}">
+          <a href="{{ route('nilai') }}">
+            <i class="fas fa-graduation-cap"></i> <!-- Ikon Mata Pelajaran -->
+            <p>Data Nilai</p>
+          </a>
+        </li>
 
 
          <li class="nav-item {{ Request::is('logout*') ? 'active' : '' }}">

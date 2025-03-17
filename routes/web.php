@@ -7,7 +7,9 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\NilaiController;
 use Illuminate\Support\Facades\Route;
+use Ramsey\Uuid\Rfc4122\NilTrait;
 
 Route::get('/', function () {
     return view('welcome');
@@ -50,6 +52,14 @@ Route::middleware(['auth', 'verified'])->group(function() {
     Route::get('/mapel/edit/{id}', [MapelController::class, 'edit'])->name('mapel.edit');
     Route::put('/mapel/update/{id}', [MapelController::class, 'update'])->name('mapel.update');
     Route::delete('/mapel/delete/{id}', [MapelController::class, 'destroy'])->name('mapel.destroy');
+
+    // Routes untuk nilai
+    Route::get('/nilai', [NilaiController::class, 'index'])->name('nilai');
+    Route::get('/nilai/create', [NilaiController::class, 'create'])->name('nilai.create');
+    Route::post('/nilai/store', [NilaiController::class, 'store'])->name('nilai.store');
+    Route::get('/nilai/edit/{id}', [NilaiController::class, 'edit'])->name('nilai.edit');
+    Route::put('/nilai/update/{id}', [NilaiController::class, 'update'])->name('nilai.update');
+    Route::delete('/nilai/delete/{id}', [NilaiController::class, 'destroy'])->name('nilai.destroy');
 
     // Routes untuk Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
