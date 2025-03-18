@@ -1,0 +1,46 @@
+        @forelse ($mapel as $index => $m)
+        <tr class="table-light">
+        <td>{{ $mapel->firstItem() + $index }}</td>
+        <td class="text-start">{{ $m->name }}</td>
+        <td>
+            <div class="d-flex justify-content-center gap-2">
+            <a
+                href="{{ route('mapel.edit', $m->id) }}"
+                class="btn btn-warning btn-sm"
+            >
+                <i class="fas fa-edit"></i>
+            </a>
+            <form
+                action="{{ route('mapel.destroy', $m->id) }}"
+                method="POST"
+                class="d-inline"
+                onsubmit="return confirmDelete(event)"
+            >
+                @csrf @method('DELETE')
+                <button type="submit" class="btn btn-danger btn-sm">
+                <i class="fas fa-trash"></i>
+                </button>
+            </form>
+            </div>
+        </td>
+        </tr>
+        @empty
+        <tr>
+        <td colspan="3" class="text-center text-muted">
+            Tidak ada data mata pelajaran
+        </td>
+        </tr>
+        @endforelse
+
+        <form method="GET" action="{{ route('mapel') }}" class="mb-3">
+        <div class="input-group" style="max-width: 500px">
+            <input
+            type="search"
+            name="search"
+            class="form-control"
+            placeholder="Cari Mata Pelajaran"
+            value="{{ request('search') }}"
+            />
+            <button type="submit" class="btn btn-dark">Cari</button>
+        </div>
+        </form>
