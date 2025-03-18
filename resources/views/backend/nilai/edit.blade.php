@@ -15,7 +15,7 @@
 
                                 <div class="mb-3">
                                     <label for="student_id" class="form-label fw-bold">Nama Siswa</label>
-                                    <select  id="student_id" name="student_id" class="form-control select2" required>
+                                    <select id="student_id" name="student_id" class="form-control select2" required>
                                         @foreach($students as $student)
                                             <option value="{{ $student->id }}">{{ $student->name }}</option>
                                         @endforeach
@@ -24,7 +24,7 @@
 
                                 <div class="mb-3">
                                     <label for="teacher_id" class="form-label fw-bold">Nama Guru</label>
-                                    <select  id="teacher_id" name="teacher_id" class="form-control select2" required>
+                                    <select id="teacher_id" name="teacher_id" class="form-control select2" required>
                                         @foreach($teachers as $teacher)
                                             <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
                                         @endforeach
@@ -33,7 +33,7 @@
 
                                 <div class="mb-3">
                                     <label for="mapel_id" class="form-label fw-bold">Mata Pelajaran</label>
-                                    <select  id="mapel_id" name="mapel_id" class="form-control select2" required>
+                                    <select id="mapel_id" name="mapel_id" class="form-control select2" required>
                                         @foreach($mapels as $mapel)
                                             <option value="{{ $mapel->id }}">{{ $mapel->name }}</option>
                                         @endforeach
@@ -42,8 +42,8 @@
 
                                 <div class="mb-3">
                                     <label for="nilai" class="form-label fw-bold">Nilai</label>
-                                    <input type="number" class="form-control" id="nilai" name="nilai" value="{{ old('nilai', $nilai->nilai) }}"
-                                        required>
+                                    <input type="number" class="form-control" id="nilai" name="nilai"
+                                        value="{{ old('nilai', $nilai->nilai) }}" required>
                                 </div>
 
 

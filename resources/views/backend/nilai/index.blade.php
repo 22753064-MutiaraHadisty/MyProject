@@ -28,8 +28,7 @@
         <div class="card shadow-sm ms-4 me-4">
             <div class="card-body p-2">
                 <div class="table-responsive">
-                    <table id="nilai"
-                        class="table table-hover table-striped table-bordered table-sm text-center small">
+                    <table id="nilai" class="table table-hover table-striped table-bordered table-sm text-center small">
                         <thead class="table-dark">
                             <tr>
                                 <th style="width: 5%;">No</th>
@@ -48,7 +47,7 @@
         </div>
     </div>
 @endsection
-    
+
 @section('script')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>

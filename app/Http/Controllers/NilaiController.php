@@ -40,7 +40,7 @@ class NilaiController extends Controller
         }
 
         return view('backend.nilai.index');
-    } 
+    }
 
     public function create()
     {
