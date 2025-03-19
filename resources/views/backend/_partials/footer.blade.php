@@ -24,5 +24,4 @@
       <a target="_blank" href="https://themewagon.com/">ThemeWagon</a>.
     </div>
   </div>
-         
 </footer>
