@@ -36,7 +36,7 @@
                                 <th style="width: 25%;">Nama Guru</th>
                                 <th style="width: 20%;">Mata Pelajaran</th>
                                 <th style="width: 10%;">Nilai</th>
-                                <th style="width: 10%;">Aksi</th>
+                                <th style="width: 15%;">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>

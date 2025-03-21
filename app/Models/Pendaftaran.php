@@ -21,6 +21,7 @@ class Pendaftaran extends Model
         'nomor_hp',
         'nama_ayah',
         'nama_ibu',
-        'email'
+        'email',
+        'status'
     ];
 }

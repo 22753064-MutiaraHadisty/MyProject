@@ -105,7 +105,7 @@
                         value="{{ old('nama_ibu') }}">
 
                     <button type="submit" class="btn btn-success btn-custom mt-3">Simpan</button>
-                    <a href="{{ route('pendaftaran') }}" class="btn btn-dark btn-custom mt-2">Kembali</a>
+                    <a href="{{ ('/') }}" class="btn btn-dark btn-custom mt-2">Kembali</a>
                 </form>
             </div>
         </div>
