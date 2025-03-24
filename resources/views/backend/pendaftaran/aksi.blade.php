@@ -94,43 +94,57 @@
     let currentId = null;
 
     function showDetail(id) {
-        currentId = id;
-        $.get(`/pendaftaran/${id}`, function (data) {
-            $('#detail-nama').text(data.nama);
-            $('#detail-nisn').text(data.nisn);
-            $('#detail-tempat-lahir').text(data.tempat_lahir);
-            $('#detail-tanggal-lahir').text(data.tanggal_lahir);
-            $('#detail-jenis-kelamin').text(data.jenis_kelamin);
-            $('#detail-asal-sekolah').text(data.asal_sekolah);
-            $('#detail-nomor-hp').text(data.nomor_hp);
-            $('#detail-nama-ayah').text(data.nama_ayah);
-            $('#detail-nama-ibu').text(data.nama_ibu);
-            $('#detail-email').text(data.email);
+    $.get(`/pendaftaran/${id}`, function (data) {
+        let exportButton = data.status === 'diterima'
+            ? `<button onclick="exportPdf(${data.id})" class="btn btn-primary ms-2">Export PDF</button>`
+            : '';
 
-            let badgeClass = data.status === 'diterima' ? 'bg-success' : (data.status === 'ditolak' ? 'bg-danger' : 'bg-warning');
-            $('#detail-status').html(`<span class="badge ${badgeClass}">${data.status}</span>`);
-
-            $('#detailModal').modal('show');
+        Swal.fire({
+            title: "Detail Pendaftaran",
+            html: `
+                <table class="table table-bordered">
+                    <tr><th>Nama</th><td>${data.nama}</td></tr>
+                    <tr><th>NISN</th><td>${data.nisn}</td></tr>
+                    <tr><th>Tempat Lahir</th><td>${data.tempat_lahir}</td></tr>
+                    <tr><th>Tanggal Lahir</th><td>${data.tanggal_lahir}</td></tr>
+                    <tr><th>Jenis Kelamin</th><td>${data.jenis_kelamin}</td></tr>
+                    <tr><th>Asal Sekolah</th><td>${data.asal_sekolah}</td></tr>
+                    <tr><th>Nomor HP</th><td>${data.nomor_hp}</td></tr>
+                    <tr><th>Email</th><td>${data.email}</td></tr>
+                    <tr><th>Status</th><td><span class="badge ${data.status === 'diterima' ? 'bg-success' : 'bg-danger'}">${data.status}</span></td></tr>
+                </table>
+                <div class="mt-3">
+                    <button onclick="updateStatus(${data.id}, 'diterima')" class="btn btn-success me-2">Diterima</button>
+                    <button onclick="updateStatus(${data.id}, 'ditolak')" class="btn btn-danger">Ditolak</button>
+                    ${exportButton}
+                </div>
+            `,
+            icon: "info",
+            showCloseButton: true,
+            showConfirmButton: false
         });
-    }
+    });
+}
 
-    function updateStatus(status) {
-        if (!currentId) return;
-        $.ajax({
-            url: `/pendaftaran/${currentId}/update-status`,
-            method: "POST",
-            data: {
-                _token: "{{ csrf_token() }}",
-                status: status
-            },
-            success: function () {
-                $('#detailModal').modal('hide');
-                $('#pendaftaran').DataTable().ajax.reload();
-                Swal.fire("Berhasil!", "Status berhasil diperbarui.", "success");
-            }
-        });
-    }
+function exportPdf(id) {
+    window.location.href = `/pendaftaran/${id}/export-pdf`;
+}
 
+        function updateStatus(id, status) {
+            $.ajax({
+                url: `/pendaftaran/${id}/update-status`,
+                method: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    status: status
+                },
+                success: function () {
+                    Swal.fire("Sukses!", "Status berhasil diperbarui", "success").then(() => {
+                        $('#pendaftaran').DataTable().ajax.reload();
+                    });
+                }
+            });
+        }
     function confirmDelete(event) {
         event.preventDefault();
         let form = event.target;

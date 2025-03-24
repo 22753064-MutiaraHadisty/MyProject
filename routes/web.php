@@ -19,7 +19,7 @@ Route::get('/', function () {
 // ==================== Pendaftaran (Bisa Diakses Tanpa Login) ====================
 Route::get('/pendaftaran/create', [PendaftaranController::class, 'create'])->name('pendaftaran.create'); // Form Pendaftaran
 Route::post('/pendaftaran/store', [PendaftaranController::class, 'store'])->name('pendaftaran.store'); // Simpan Pendaftaran
-
+Route::get('/pendaftaran/search', [PendaftaranController::class, 'search'])->name('pendaftaran.search');
 // ==================== Routes yang Memerlukan Login ====================
 Route::middleware(['auth', 'verified'])->group(function () {
 
@@ -78,6 +78,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/pendaftaran/delete/{id}', [PendaftaranController::class, 'destroy'])->name('pendaftaran.destroy');
     Route::get('/pendaftaran/export/pdf', [PendaftaranController::class, 'exportPDF'])->name('pendaftaran.export.pdf');
     Route::post('/pendaftaran/{id}/update-status', [PendaftaranController::class, 'updateStatus']);
+    Route::get('/pendaftaran/{id}/export-pdf', [PendaftaranController::class, 'exportPdf'])->name('pendaftaran.export-pdf');
+
+
+
+
 
 
     // Profile

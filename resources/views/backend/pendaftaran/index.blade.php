@@ -71,28 +71,47 @@
             $.get(`/pendaftaran/${id}`, function (data) {
                 Swal.fire({
                     title: "Detail Pendaftaran",
+                    width: '900px', // Lebarkan modal untuk tampilan lebih baik
+                    heightAuto: false, // Pastikan tinggi modal tetap
                     html: `
-                                        <table class="table table-bordered">
-                                            <tr><th>Nama</th><td>${data.nama}</td></tr>
-                                            <tr><th>NISN</th><td>${data.nisn}</td></tr>
-                                            <tr><th>Tempat Lahir</th><td>${data.tempat_lahir}</td></tr>
-                                            <tr><th>Tanggal Lahir</th><td>${data.tanggal_lahir}</td></tr>
-                                            <tr><th>Jenis Kelamin</th><td>${data.jenis_kelamin}</td></tr>
-                                            <tr><th>Asal Sekolah</th><td>${data.asal_sekolah}</td></tr>
-                                            <tr><th>Nomor HP</th><td>${data.nomor_hp}</td></tr>
-                                            <tr><th>Nama Ayah</th><td>${data.nama_ayah}</td></tr>
-                                            <tr><th>Nama Ibu</th><td>${data.nama_ibu}</td></tr>
-                                            <tr><th>Email</th><td>${data.email}</td></tr>
-                                            <tr><th>Status</th><td><span class="badge ${data.status === 'diterima' ? 'bg-success' : data.status === 'ditolak' ? 'bg-danger' : 'bg-warning'}">${data.status}</span></td></tr>
-                                        </table>
-                                        <div class="mt-3">
-                                            <button onclick="updateStatus(${data.id}, 'diterima')" class="btn btn-success me-2">Diterima</button>
-                                            <button onclick="updateStatus(${data.id}, 'ditolak')" class="btn btn-danger">Ditolak</button>
-                                        </div>
-                                    `,
+                    <div style="max-height: 400px; overflow-y: auto; text-align: left;">
+                        <table class="table table-bordered">
+                            <tr><th>Nama</th><td>${data.nama}</td></tr>
+                            <tr><th>NISN</th><td>${data.nisn}</td></tr>
+                            <tr><th>Tempat Lahir</th><td>${data.tempat_lahir}</td></tr>
+                            <tr><th>Tanggal Lahir</th><td>${data.tanggal_lahir}</td></tr>
+                            <tr><th>Jenis Kelamin</th><td>${data.jenis_kelamin}</td></tr>
+                            <tr><th>Asal Sekolah</th><td>${data.asal_sekolah}</td></tr>
+                            <tr><th>Nomor HP</th><td>${data.nomor_hp}</td></tr>
+                            <tr><th>Nama Ayah</th><td>${data.nama_ayah}</td></tr>
+                            <tr><th>Nama Ibu</th><td>${data.nama_ibu}</td></tr>
+                            <tr><th>Email</th><td>${data.email}</td></tr>
+                            <tr><th>Status</th>
+                                <td>
+                                    <span class="badge ${data.status === 'diterima' ? 'bg-success' : data.status === 'ditolak' ? 'bg-danger' : 'bg-warning'}">
+                                        ${data.status}
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                `,
+                    footer: `
+                    <div class="d-flex justify-content-center">
+                        <button onclick="updateStatus(${data.id}, 'diterima')" class="btn btn-success me-2">✔ Diterima</button>
+                        <button onclick="updateStatus(${data.id}, 'ditolak')" class="btn btn-danger me-2">✖ Ditolak</button>
+                        ${data.status === 'diterima' ? `<a href="/pendaftaran/${data.id}/download" class="btn btn-primary me-2">⬇ Download PDF</a>` : ''}
+                        <button class="btn btn-secondary" id="btn-kembali">↩ Kembali</button>
+                    </div>
+                `,
                     icon: "info",
                     showCloseButton: true,
-                    showConfirmButton: false
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        document.getElementById("btn-kembali").addEventListener("click", function () {
+                            Swal.close();
+                        });
+                    }
                 });
             });
         }

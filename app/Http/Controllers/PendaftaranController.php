@@ -5,22 +5,20 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Pendaftaran;
 use Yajra\DataTables\Facades\DataTables;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class PendaftaranController extends Controller
 {
     public function __construct()
     {
-        // Middleware untuk mengamankan akses
-        $this->middleware('auth')->except(['create', 'store']);
+        $this->middleware('auth')->except(['create', 'store', 'search']);
     }
 
-    /**
-     * Menampilkan daftar pendaftaran menggunakan DataTables.
-     */
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Pendaftaran::select(['id', 'nama', 'nisn',  'asal_sekolah', 'email','status'])->get();
+            $data = Pendaftaran::select(['id', 'nama', 'nisn', 'asal_sekolah', 'email', 'status'])->get();
 
             return DataTables::of($data)
                 ->addIndexColumn()
@@ -42,17 +40,11 @@ class PendaftaranController extends Controller
         return view('backend.pendaftaran.index');
     }
 
-    /**
-     * Menampilkan form pendaftaran.
-     */
     public function create()
     {
         return view('auth.create');
     }
 
-    /**
-     * Menyimpan data pendaftaran dengan status default "pending".
-     */
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -73,27 +65,18 @@ class PendaftaranController extends Controller
         return redirect('/')->with('success', 'Pendaftaran berhasil dikirim.');
     }
 
-    /**
-     * Mengambil data pendaftaran untuk detail modal.
-     */
     public function show($id)
     {
         $pendaftaran = Pendaftaran::findOrFail($id);
         return response()->json($pendaftaran);
     }
 
-    /**
-     * Menampilkan form edit pendaftaran.
-     */
     public function edit($id)
     {
         $pendaftaran = Pendaftaran::findOrFail($id);
         return view('backend.pendaftaran.edit', compact('pendaftaran'));
     }
 
-    /**
-     * Memperbarui data pendaftaran.
-     */
     public function update(Request $request, $id)
     {
         $validatedData = $request->validate([
@@ -115,9 +98,6 @@ class PendaftaranController extends Controller
         return redirect()->route('pendaftaran.index')->with('success', 'Data pendaftaran berhasil diperbarui.');
     }
 
-    /**
-     * Menghapus data pendaftaran.
-     */
     public function destroy($id)
     {
         $pendaftaran = Pendaftaran::findOrFail($id);
@@ -126,9 +106,6 @@ class PendaftaranController extends Controller
         return response()->json(['success' => true, 'message' => 'Data pendaftaran berhasil dihapus.']);
     }
 
-    /**
-     * Mengubah status pendaftaran (Pending → Diterima/Ditolak).
-     */
     public function updateStatus(Request $request, $id)
     {
         $request->validate(['status' => 'required|in:diterima,ditolak']);
@@ -137,5 +114,38 @@ class PendaftaranController extends Controller
         $pendaftaran->update(['status' => $request->status]);
 
         return response()->json(['success' => true, 'message' => 'Status berhasil diperbarui.']);
+    }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+
+        if (!$query) {
+            return response()->json(['success' => false, 'message' => 'Masukkan NISN atau Nama yang ingin dicari']);
+        }
+
+        $pendaftaran = Pendaftaran::where('nisn', 'LIKE', "%{$query}%")
+            ->orWhere('nama', 'LIKE', "%{$query}%")
+            ->select('nama', 'nisn', 'status')
+            ->first();
+
+        return view('auth.search', compact('pendaftaran'));
+    }
+    public function exportPdf($id, Request $request)
+    {
+        $pendaftaran = Pendaftaran::findOrFail($id);
+
+        // Cek jika status bukan 'diterima', tolak akses
+        if ($pendaftaran->status !== 'diterima') {
+            return abort(403, 'Akses ditolak! Hanya yang diterima bisa mengunduh PDF.');
+        }
+
+        $pdf = Pdf::loadView('backend.pendaftaran.pdf', compact('pendaftaran'));
+
+        if ($request->has('preview')) {
+            return $pdf->stream("Pendaftaran_{$pendaftaran->nama}.pdf"); // Tampilkan di modal
+        }
+
+        return $pdf->download("Pendaftaran_{$pendaftaran->nama}.pdf"); // Unduh langsung
     }
 }
